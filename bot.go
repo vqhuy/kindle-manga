@@ -40,7 +40,7 @@ func (b *bot) run() {
 
 		dir, err := mkdir(name)
 		if err != nil {
-			log.Println(err)
+			botErr(err, "mkdir")
 			continue
 		}
 
@@ -52,16 +52,16 @@ func (b *bot) run() {
 
 			collectTruyenTranh(url2, dir) // try truyentranh.net first
 			if output, err = kcc(name, dir); err != nil {
-				log.Println(err)
+				botErr(err, "[kcc-truyentranh] "+name)
 				collectTruyenTranhTuan(url1, dir) // try truyentranhtuan.com
 				if output, err = kcc(name, dir); err != nil {
-					log.Println(err)
+					botErr(err, "[kcc-truyentranhtuan] "+name)
 					return
 				}
 			}
 			for _, o := range output {
 				if err := sendToKindle(mail, o); err != nil {
-					log.Println(err)
+					botErr(err, "send-to-kindle")
 					return
 				}
 			}
@@ -82,4 +82,8 @@ func (b *bot) save() error {
 		return err
 	}
 	return ioutil.WriteFile(b.configPath, confBuf.Bytes(), 0755)
+}
+
+func botErr(e error, extra string) {
+	log.Println("[bot] " + extra + ": " + e.Error())
 }
