@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"path/filepath"
 	"sync"
 
 	"github.com/BurntSushi/toml"
@@ -48,20 +47,25 @@ func (b *bot) run() {
 		b.waitGroup.Add(1)
 		go func() {
 			defer b.waitGroup.Done()
+			var output []string
+			var err error
+
 			collectTruyenTranh(url2, dir) // try truyentranh.net first
-			err := kcc(name, dir)
-			if err != nil {
+			if output, err = kcc(name, dir); err != nil {
 				log.Println(err)
 				collectTruyenTranhTuan(url1, dir) // try truyentranhtuan.com
-				if err := kcc(name, dir); err != nil {
+				if output, err = kcc(name, dir); err != nil {
 					log.Println(err)
 					return
 				}
 			}
-			if err := sendToKindle(mail, filepath.Join(dir, name+".mobi")); err != nil {
-				log.Println(err)
-				return
+			for _, o := range output {
+				if err := sendToKindle(mail, o); err != nil {
+					log.Println(err)
+					return
+				}
 			}
+
 			// update config
 			b.fav.Manga[index].Chap++
 		}()

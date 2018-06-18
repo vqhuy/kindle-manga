@@ -47,8 +47,3 @@ risk.)
 crontab -e
 # 00 21 * * * /path/to/your/kindle-manga
 ```
-
-## TODO
-
-- automatically split file when file size is larger than 25MB (Gmail's message
-  size limits)

@@ -29,6 +29,20 @@ func rmdir() {
 	}
 }
 
+func mv(oldpath []os.FileInfo, dir, subdir string) error {
+	newpath := filepath.Join(dir, subdir)
+	if err := os.MkdirAll(newpath, 0755); err != nil {
+		return err
+	}
+
+	for _, o := range oldpath {
+		if err := os.Rename(filepath.Join(dir, o.Name()), filepath.Join(newpath, o.Name())); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func saveJSONToFile(path string, v interface{}) error {
 	w, err := os.Create(path)
 	if err != nil {
