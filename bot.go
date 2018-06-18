@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"sync"
 
 	"github.com/BurntSushi/toml"
 )
@@ -13,7 +12,7 @@ import (
 type bot struct {
 	configPath string
 	fav        collection
-	waitGroup  sync.WaitGroup
+	// waitGroup  sync.WaitGroup
 }
 
 func newBot(coll collection, configPath string) *bot {
@@ -44,34 +43,27 @@ func (b *bot) run() {
 			continue
 		}
 
-		b.waitGroup.Add(1)
-		go func() {
-			defer b.waitGroup.Done()
-			var output []string
-			var err error
+		var output []string
 
-			collectTruyenTranh(url2, dir) // try truyentranh.net first
+		collectTruyenTranh(url2, dir) // try truyentranh.net first
+		if output, err = kcc(name, dir); err != nil {
+			botErr(err, "[kcc-truyentranh] "+name)
+			collectTruyenTranhTuan(url1, dir) // try truyentranhtuan.com
 			if output, err = kcc(name, dir); err != nil {
-				botErr(err, "[kcc-truyentranh] "+name)
-				collectTruyenTranhTuan(url1, dir) // try truyentranhtuan.com
-				if output, err = kcc(name, dir); err != nil {
-					botErr(err, "[kcc-truyentranhtuan] "+name)
-					return
-				}
+				botErr(err, "[kcc-truyentranhtuan] "+name)
+				continue
 			}
-			for _, o := range output {
-				if err := sendToKindle(mail, o); err != nil {
-					botErr(err, "send-to-kindle")
-					return
-				}
+		}
+		for _, o := range output {
+			if err := sendToKindle(mail, o); err != nil {
+				botErr(err, "send-to-kindle")
+				continue
 			}
+		}
 
-			// update config
-			b.fav.Manga[index].Chap++
-		}()
+		// update config
+		b.fav.Manga[index].Chap++
 	}
-
-	b.waitGroup.Wait()
 }
 
 func (b *bot) save() error {
