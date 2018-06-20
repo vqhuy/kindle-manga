@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/c633/kindle-manga/util"
 	gomail "gopkg.in/gomail.v2"
 )
 
@@ -48,12 +49,12 @@ func getMailSettings() *Mail {
 func restoreMailSettings() (*Mail, error) {
 	mailSettings := &Mail{}
 	mailFile := filepath.Join(configDir, "mail.json")
-	err := loadJSONFromFile(mailFile, mailSettings)
+	err := util.LoadJSONFromFile(mailFile, mailSettings)
 	if err != nil {
 		log.Println(err)
 		mailSettings = getMailSettings()
 
-		err = saveJSONToFile(mailFile, mailSettings)
+		err = util.SaveJSONToFile(mailFile, mailSettings)
 		if err != nil {
 			return nil, err
 		}

@@ -26,9 +26,8 @@ func init() {
 
 type manga struct {
 	Name string
-	URL1 string // truyentranhtuan.com
-	URL2 string // truyentranh.net
 	Chap int
+	URL  []string
 }
 type collection struct {
 	Manga []manga
@@ -41,7 +40,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	bot := newBot(coll, configPath)
+	bot := newRobot(coll, configPath)
 	bot.run()
 	bot.save()
 }

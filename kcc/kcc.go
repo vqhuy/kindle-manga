@@ -1,4 +1,4 @@
-package main
+package kcc
 
 import (
 	"io/ioutil"
@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+
+	"github.com/c633/kindle-manga/util"
 )
 
 var kccCmd = "kcc-c2e"
@@ -14,12 +16,15 @@ var ext = ".mobi"
 
 var limit = 30 // maximum 30 pages per file, to avoid email attachment limits.
 
-func kcc(name, dir string) ([]string, error) {
+func Kcc(name, dir string) ([]string, error) {
 	log.Printf("Creating MOBI file(s) for " + name + "...")
 	// split if necessary
 	files, _ := ioutil.ReadDir(dir)
 	if len(files) <= limit {
-		return []string{filepath.Join(dir, name+".mobi")}, kccExec(dir)
+		if err := kccExec(dir); err != nil {
+			return nil, err
+		}
+		return []string{filepath.Join(dir, name+".mobi")}, nil
 	}
 
 	var output []string
@@ -32,7 +37,7 @@ func kcc(name, dir string) ([]string, error) {
 			end = len(files)
 		}
 
-		if err := mv(files[(i-1)*limit:end], dir, part); err != nil {
+		if err := util.Mv(files[(i-1)*limit:end], dir, part); err != nil {
 			return nil, err
 		}
 

@@ -1,5 +1,4 @@
 [[Manga]]
   Name = "masamune"
-  URL1 = "http://truyentranhtuan.com/masamune-kun-no-revenge"
-  URL2 = "http://truyentranh.net/masamune-kun-no-revenge"
   Chap = 48
+  URL = ["http://truyentranh.net/masamune-kun-no-revenge", "http://truyentranhtuan.com/masamune-kun-no-revenge"]

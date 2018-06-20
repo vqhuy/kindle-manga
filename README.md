@@ -1,10 +1,14 @@
 # kindle-manga
 
-`kindle-manga` periodically fetches your favorite manga(s) from
-[truyentranhtuan.com](http://truyentranhtuan.com) and
-[truyentranh.net](http://truyentranh.net) for latest chapters, converts them to
-MOBI using [kcc](https://github.com/ciromattia/kcc), and then sends them to your
-Kindle.
+`kindle-manga` periodically fetches your favorite manga(s) for latest chapters,
+converts them to MOBI using [kcc](https://github.com/ciromattia/kcc), and then
+sends them to your Kindle.
+
+**Sources**
+
+- [http://truyentranhtuan.com](http://truyentranhtuan.com)
+- [http://truyentranh.net](http://truyentranh.net)
+- [http://hocvientruyentranh.com](http://hocvientruyentranh.com)
 
 kcc uses **Kindle Oasis 2** profile by default. I was too lazy to put it into a
 config file, so please forgive me and change [this

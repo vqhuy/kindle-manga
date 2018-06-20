@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-func mkdir(name string) (string, error) {
+func Mkdir(name string) (string, error) {
 	dir, err := ioutil.TempDir("", "kindle-manga-"+name+"-")
 	if err != nil {
 		return "", err
@@ -17,7 +17,7 @@ func mkdir(name string) (string, error) {
 	return fp, err
 }
 
-func rmdir() {
+func Rmdir() {
 	files, err := filepath.Glob(filepath.Join(os.TempDir(), "kindle-manga-*"))
 	if err != nil {
 		panic(err)
@@ -29,7 +29,7 @@ func rmdir() {
 	}
 }
 
-func mv(oldpath []os.FileInfo, dir, subdir string) error {
+func Mv(oldpath []os.FileInfo, dir, subdir string) error {
 	newpath := filepath.Join(dir, subdir)
 	if err := os.MkdirAll(newpath, 0755); err != nil {
 		return err
@@ -43,7 +43,7 @@ func mv(oldpath []os.FileInfo, dir, subdir string) error {
 	return nil
 }
 
-func saveJSONToFile(path string, v interface{}) error {
+func SaveJSONToFile(path string, v interface{}) error {
 	w, err := os.Create(path)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func saveJSONToFile(path string, v interface{}) error {
 	return json.NewEncoder(w).Encode(v)
 }
 
-func loadJSONFromFile(path string, v interface{}) error {
+func LoadJSONFromFile(path string, v interface{}) error {
 	r, err := os.Open(path)
 	if err != nil {
 		return err
