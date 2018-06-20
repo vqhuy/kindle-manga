@@ -25,10 +25,9 @@ func Register(c Collector) {
 	collectors[c.Page()] = c
 }
 
-func Run(url []string, name string, chap int, dir string) ([]string, bool) {
+func Run(url []string, name string, chap int, dir string) []string {
 	var output []string
 	var err error
-	var res = false
 
 	for n, c := range collectors {
 		link := find(n, url)
@@ -40,10 +39,9 @@ func Run(url []string, name string, chap int, dir string) ([]string, bool) {
 			logErr(err, "["+c.Page()+"]-["+name+"]")
 			continue
 		}
-		res = true
 		break
 	}
-	return output, res
+	return output
 }
 
 func find(name string, url []string) string {

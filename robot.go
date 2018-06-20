@@ -42,7 +42,10 @@ func (b *robot) run() {
 			continue
 		}
 
-		output, res := bot.Run(manga.URL, name, manga.Chap, dir)
+		output := bot.Run(manga.URL, name, manga.Chap, dir)
+		if len(output) == 0 {
+			continue
+		}
 		for _, o := range output {
 			if err := sendToKindle(mail, o); err != nil {
 				logErr(err, "send-to-kindle")
@@ -51,9 +54,7 @@ func (b *robot) run() {
 		}
 
 		// update config
-		if res {
-			b.fav.Manga[index].Chap++
-		}
+		b.fav.Manga[index].Chap++
 	}
 }
 
