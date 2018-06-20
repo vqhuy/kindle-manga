@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/c633/kindle-manga/kcc"
+	"github.com/c633/kindle-manga/util"
 	"github.com/gocolly/colly"
 )
 
@@ -79,7 +80,8 @@ func (b *Bot) Collect(base string, chap int, outputDir string) {
 	})
 
 	b.Colly.OnResponse(func(r *colly.Response) {
-		name := fmt.Sprintf("%03d%s", nameInd, filepath.Ext(r.FileName()))
+		ext := util.GetExt(r.FileName())
+		name := fmt.Sprintf("%03d%s", nameInd, ext)
 		nameInd++
 		if strings.Index(r.Headers.Get("Content-Type"), "image") > -1 {
 			if err := r.Save(filepath.Join(outputDir, name)); err != nil {

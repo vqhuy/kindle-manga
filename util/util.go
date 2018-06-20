@@ -64,3 +64,12 @@ func LoadJSONFromFile(path string, v interface{}) error {
 
 	return json.NewDecoder(r).Decode(v)
 }
+
+func GetExt(name string) string {
+	ext := filepath.Ext(name)
+	if ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".gif" {
+		return ext
+	}
+	// set to be "jpg" by default
+	return ".jpg"
+}
