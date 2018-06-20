@@ -1,6 +1,9 @@
 package hocvientruyentranh
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/c633/kindle-manga/bot"
 	"github.com/gocolly/colly"
 )
@@ -24,20 +27,19 @@ func (b *collector) Page() string {
 }
 
 func (b *collector) GetLink(base string, chap int) string {
+	// should not use the base colly's collector
+	c := colly.NewCollector()
 	var link string
-	var found = false
-	b.Colly.OnHTML(`div.box-body tbody`, func(e *colly.HTMLElement) {
-		if !found {
-			link, _ = e.DOM.
-				Children().First().
-				Children().First().
-				Children().First().
-				Attr("href")
-			found = true
+	c.OnHTML(`div.box-body tbody tr`, func(e *colly.HTMLElement) {
+		s := e.DOM.Children().First().Children().First()
+		href, _ := s.Attr("href")
+		title, _ := s.Attr("title")
+		if strings.Contains(title, strconv.Itoa(chap)) {
+			link = href
 		}
 	})
 
-	b.Colly.Visit(base)
+	c.Visit(base)
 	return link
 }
 
