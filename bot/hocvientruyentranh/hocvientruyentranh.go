@@ -10,9 +10,7 @@ import (
 
 func init() {
 	bot.Register(&collector{
-		Bot: &bot.Bot{
-			Colly: colly.NewCollector(),
-		},
+		Bot: &bot.Bot{},
 	})
 }
 
@@ -44,6 +42,8 @@ func (b *collector) GetLink(base string, chap int) string {
 }
 
 func (b *collector) Collect(base string, chap int, outputDir string) {
+	b.Colly = colly.NewCollector()
+
 	b.Colly.OnHTML(`div.manga-container`, func(e *colly.HTMLElement) {
 		e.ForEach("img", func(i int, ee *colly.HTMLElement) {
 			link := ee.Attr("src")

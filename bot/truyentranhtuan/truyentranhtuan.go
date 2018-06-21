@@ -13,9 +13,7 @@ import (
 
 func init() {
 	bot.Register(&collector{
-		Bot: &bot.Bot{
-			Colly: colly.NewCollector(),
-		},
+		Bot: &bot.Bot{},
 	})
 }
 
@@ -34,6 +32,8 @@ func (b *collector) GetLink(base string, chap int) string {
 }
 
 func (b *collector) Collect(base string, chap int, outputDir string) {
+	b.Colly = colly.NewCollector()
+
 	re := regexp.MustCompile(`(?m)var slides_page_url_path = \s*(.*).$`)
 
 	b.Colly.OnHTML(`script`, func(e *colly.HTMLElement) {
