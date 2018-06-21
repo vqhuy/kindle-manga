@@ -9,6 +9,7 @@ sends them to your Kindle.
 - [http://truyentranhtuan.com](http://truyentranhtuan.com)
 - [http://truyentranh.net](http://truyentranh.net)
 - [http://hocvientruyentranh.com](http://hocvientruyentranh.com)
+- [http://blogtruyen.com](http://blogtruyen.com)
 
 kcc uses **Kindle Oasis 2** profile by default. I was too lazy to put it into a
 config file, so please forgive me and change [this
