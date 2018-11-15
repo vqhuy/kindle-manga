@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/c633/kindle-manga/util"
+	"github.com/vqhuy/kindle-manga/util"
 )
 
 var kccCmd = "kcc-c2e"

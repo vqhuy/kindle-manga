@@ -7,8 +7,8 @@ import (
 	"log"
 
 	"github.com/BurntSushi/toml"
-	"github.com/c633/kindle-manga/bot"
-	"github.com/c633/kindle-manga/util"
+	"github.com/vqhuy/kindle-manga/bot"
+	"github.com/vqhuy/kindle-manga/util"
 )
 
 type robot struct {

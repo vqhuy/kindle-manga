@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "github.com/c633/kindle-manga/bot/blogtruyen"
-	_ "github.com/c633/kindle-manga/bot/hocvientruyentranh"
-	_ "github.com/c633/kindle-manga/bot/truyentranh"
-	_ "github.com/c633/kindle-manga/bot/truyentranhtuan"
+	_ "github.com/vqhuy/kindle-manga/bot/blogtruyen"
+	_ "github.com/vqhuy/kindle-manga/bot/hocvientruyentranh"
+	_ "github.com/vqhuy/kindle-manga/bot/truyentranh"
+	_ "github.com/vqhuy/kindle-manga/bot/truyentranhtuan"
 )

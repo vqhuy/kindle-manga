@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/c633/kindle-manga/util"
+	"github.com/vqhuy/kindle-manga/util"
 	gomail "gopkg.in/gomail.v2"
 )
 

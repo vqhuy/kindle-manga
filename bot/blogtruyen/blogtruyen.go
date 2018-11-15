@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/c633/kindle-manga/bot"
+	"github.com/vqhuy/kindle-manga/bot"
 	"github.com/gocolly/colly"
 )
 

@@ -13,7 +13,7 @@ sends them to your Kindle.
 
 kcc uses **Kindle Oasis 2** profile by default. I was too lazy to put it into a
 config file, so please forgive me and change [this
-line](https://github.com/c633/kindle-manga/blob/master/kcc.go#L9) to your
+line](https://github.com/vqhuy/kindle-manga/blob/master/kcc.go#L9) to your
 device's profile.
 
 ## Installation
@@ -29,7 +29,7 @@ You need to have Golang version 1.8 or higher installed. If Golang is set up
 correctly, you can simply run:
 
 ```
-go get github.com/c633/kindle-manga...
+go get github.com/vqhuy/kindle-manga...
 ```
 
 ## Usage

@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/c633/kindle-manga/kcc"
-	"github.com/c633/kindle-manga/util"
+	"github.com/vqhuy/kindle-manga/kcc"
+	"github.com/vqhuy/kindle-manga/util"
 	"github.com/gocolly/colly"
 )
 
