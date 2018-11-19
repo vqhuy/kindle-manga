@@ -3,12 +3,14 @@ package bot
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"path/filepath"
+	"regexp"
 	"strings"
 
+	"github.com/gocolly/colly"
 	"github.com/vqhuy/kindle-manga/kcc"
 	"github.com/vqhuy/kindle-manga/util"
-	"github.com/gocolly/colly"
 )
 
 type Collector interface {
@@ -93,4 +95,28 @@ func (b *Bot) Collect(base string, chap int, outputDir string) {
 			}
 		}
 	})
+}
+
+func (b *Bot) Visit(url string) {
+	org := strings.TrimSpace(url)
+	org = b.filterGoogleCacheLink(org)
+	b.Colly.Visit(org)
+}
+
+func (b *Bot) filterGoogleCacheLink(str string) string {
+	google1 := "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy"
+	google2 := "https://images2-focus-opensocial.googleusercontent.com/gadgets/proxy"
+
+	re := regexp.MustCompile(`(?m)url=(.*)$`)
+
+	if strings.Contains(str, google1) || strings.Contains(str, google2) {
+		if re.MatchString(str) {
+			org := re.FindStringSubmatch(str)[1]
+			in, err := url.QueryUnescape(org)
+			if err == nil {
+				return in
+			}
+		}
+	}
+	return str
 }

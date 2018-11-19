@@ -47,7 +47,7 @@ func (b *collector) Collect(base string, chap int, outputDir string) {
 	b.Colly.OnHTML(`#content`, func(e *colly.HTMLElement) {
 		e.ForEach("img", func(i int, ee *colly.HTMLElement) {
 			link := ee.Attr("src")
-			b.Colly.Visit(strings.TrimSpace(link))
+			b.Visit(link)
 		})
 	})
 
