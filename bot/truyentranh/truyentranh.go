@@ -2,9 +2,10 @@ package truyentranh
 
 import (
 	"fmt"
+	"strings"
 
-	"github.com/vqhuy/kindle-manga/bot"
 	"github.com/gocolly/colly"
+	"github.com/vqhuy/kindle-manga/bot"
 )
 
 func init() {
@@ -33,19 +34,19 @@ func (b *collector) Collect(base string, chap int, outputDir string) {
 	b.Colly.OnHTML(`#viewer`, func(e *colly.HTMLElement) {
 		e.ForEach("img", func(i int, ee *colly.HTMLElement) {
 			link := ee.Attr("src")
-			b.Colly.Visit(link)
+			b.Colly.Visit(strings.TrimSpace(link))
 		})
 	})
 	b.Colly.OnHTML(`div.each-page`, func(e *colly.HTMLElement) {
 		e.ForEach("img", func(i int, ee *colly.HTMLElement) {
 			link := ee.Attr("src")
-			b.Colly.Visit(link)
+			b.Colly.Visit(strings.TrimSpace(link))
 		})
 	})
 	b.Colly.OnHTML(`div.OtherText`, func(e *colly.HTMLElement) {
 		e.ForEach("img", func(i int, ee *colly.HTMLElement) {
 			link := ee.Attr("src")
-			b.Colly.Visit(link)
+			b.Colly.Visit(strings.TrimSpace(link))
 		})
 	})
 
