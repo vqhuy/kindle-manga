@@ -104,8 +104,8 @@ func (b *Bot) Visit(url string) {
 }
 
 func (b *Bot) filterGoogleCacheLink(str string) string {
-	google1 := "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy"
-	google2 := "https://images2-focus-opensocial.googleusercontent.com/gadgets/proxy"
+	google1 := "images1-focus-opensocial.googleusercontent.com/gadgets/proxy"
+	google2 := "images2-focus-opensocial.googleusercontent.com/gadgets/proxy"
 
 	re := regexp.MustCompile(`(?m)url=(.*)$`)
 

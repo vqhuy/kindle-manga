@@ -3,6 +3,7 @@ package kcc
 import (
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
@@ -17,6 +18,8 @@ var ext = ".mobi"
 var limit = 30 // maximum 30 pages per file, to avoid email attachment limits.
 
 func Kcc(name, dir string) ([]string, error) {
+	validate(dir)
+
 	log.Printf("Creating MOBI file(s) for " + name + "...")
 	// split if necessary
 	files, _ := ioutil.ReadDir(dir)
@@ -53,4 +56,20 @@ func Kcc(name, dir string) ([]string, error) {
 func kccExec(io string) error {
 	cmd := exec.Command(kccCmd, "-p", device, "-m", "-q", "-u", "-s", "-o", io, io)
 	return cmd.Run()
+}
+
+func validate(dir string) error {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return err
+	}
+
+	for _, fp := range files {
+		if fp.Size() == 0 {
+			if err := os.Remove(filepath.Join(dir, fp.Name())); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
