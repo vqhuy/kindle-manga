@@ -11,7 +11,7 @@ import (
 	"github.com/vqhuy/kindle-manga/util"
 )
 
-var kccCmd = "kcc-c2e"
+var kccCmd = "/import/grecc/qhvu/.local/bin/kcc-c2e"
 var device = "KO"
 var ext = ".mobi"
 
