@@ -27,7 +27,7 @@ func (b *collector) GetLink(base string, chap int) string {
 	return fmt.Sprintf("%s/Chap-%03d/", base, chap)
 }
 
-func (b *collector) Collect(base string, chap int, outputDir string) {
+func (b *collector) Collect(base string, chap int, outputDir string) error {
 	b.Colly = colly.NewCollector()
 
 	b.Colly.OnHTML(`#viewer`, func(e *colly.HTMLElement) {
@@ -52,5 +52,9 @@ func (b *collector) Collect(base string, chap int, outputDir string) {
 	b.Bot.Collect(base, chap, outputDir)
 
 	link := b.GetLink(base, chap)
+	if link == "" {
+		return bot.ErrorChapNotFound
+	}
 	b.Colly.Visit(link)
+	return nil
 }

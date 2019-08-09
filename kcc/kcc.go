@@ -15,15 +15,21 @@ var kccCmd = "kcc-c2e"
 var device = "KO"
 var ext = ".mobi"
 
-var limit = 30 // maximum 30 pages per file, to avoid email attachment limits.
+type KCC struct {
+	Limit int
+}
 
-func Kcc(name, dir string) ([]string, error) {
+func New(limit int) *KCC {
+	return &KCC{Limit: limit}
+}
+
+func (kcc *KCC) Make(name, dir string) ([]string, error) {
 	validate(dir)
 
 	log.Printf("Creating MOBI file(s) for " + name + "...")
 	// split if necessary
 	files, _ := ioutil.ReadDir(dir)
-	if len(files) <= limit {
+	if len(files) <= kcc.Limit {
 		if err := kccExec(dir); err != nil {
 			return nil, err
 		}
@@ -31,16 +37,16 @@ func Kcc(name, dir string) ([]string, error) {
 	}
 
 	var output []string
-	for i := 1; i <= len(files)/limit+1; i++ {
+	for i := 1; i <= len(files)/kcc.Limit+1; i++ {
 		part := name + "_" + strconv.Itoa(i)
 		path := filepath.Join(dir, part)
 
-		end := i * limit
+		end := i * kcc.Limit
 		if end > len(files) {
 			end = len(files)
 		}
 
-		if err := util.Mv(files[(i-1)*limit:end], dir, part); err != nil {
+		if err := util.Mv(files[(i-1)*kcc.Limit:end], dir, part); err != nil {
 			return nil, err
 		}
 

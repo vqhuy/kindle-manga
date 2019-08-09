@@ -1,11 +1,7 @@
-package truyentranhtuan
+package nettruyen
 
 import (
-	"encoding/json"
 	"fmt"
-	"html"
-	"log"
-	"regexp"
 
 	"github.com/gocolly/colly"
 	"github.com/vqhuy/kindle-manga/bot"
@@ -24,32 +20,35 @@ type collector struct {
 var _ bot.Collector = (*collector)(nil)
 
 func (b *collector) Page() string {
-	return "http://truyentranhtuan.com/"
+	return "http://www.nettruyen.com"
 }
 
 func (b *collector) GetLink(base string, chap int) string {
-	return fmt.Sprintf("%s-chuong-%d/", base, chap)
+	// should not use the base colly's collector
+	chapstr := fmt.Sprintf("Chapter %d", chap)
+	c := colly.NewCollector()
+	var link string
+	c.OnHTML(`#nt_listchapter li div a`, func(e *colly.HTMLElement) {
+		s := e.DOM
+		href, _ := s.Attr("href")
+		title, _ := s.Html()
+		if title == chapstr {
+			link = href
+		}
+	})
+
+	c.Visit(base)
+	return link
 }
 
 func (b *collector) Collect(base string, chap int, outputDir string) error {
 	b.Colly = colly.NewCollector()
 
-	re := regexp.MustCompile(`(?m)var slides_page_url_path = \s*(.*).$`)
-
-	b.Colly.OnHTML(`script`, func(e *colly.HTMLElement) {
-		dom, _ := e.DOM.Html()
-		if re.MatchString(dom) {
-			urls := re.FindStringSubmatch(dom)[1]
-			urls = html.UnescapeString(urls)
-			var images []string
-			if err := json.Unmarshal([]byte(urls), &images); err != nil {
-				log.Println(err)
-				return
-			}
-			for _, u := range images {
-				b.Visit(u)
-			}
-		}
+	b.Colly.OnHTML(`div.reading-detail`, func(e *colly.HTMLElement) {
+		e.ForEach("img", func(i int, ee *colly.HTMLElement) {
+			link := ee.Attr("src")
+			b.Visit(link)
+		})
 	})
 
 	b.Bot.Collect(base, chap, outputDir)
