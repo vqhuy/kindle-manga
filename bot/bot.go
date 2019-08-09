@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/url"
@@ -13,8 +14,15 @@ import (
 	"github.com/vqhuy/kindle-manga/util"
 )
 
+const (
+	BotMode     = 30
+	OfflineMode = 10 * 30
+)
+
+var ErrorChapNotFound = errors.New("Chap not found")
+
 type Collector interface {
-	Collect(base string, chap int, outputDir string)
+	Collect(base string, chap int, outputDir string) error
 	Page() string
 	GetLink(base string, chap int) string
 }
@@ -32,19 +40,42 @@ func Run(url []string, name string, chap int, dir string) []string {
 	var output []string
 	var err error
 
+	kcc := kcc.New(BotMode)
 	for n, c := range collectors {
 		link := find(n, url)
 		if link == "" {
 			continue
 		}
 		c.Collect(link, chap, dir)
-		if output, err = kcc.Kcc(name, dir); err != nil {
+		if output, err = kcc.Make(name, dir); err != nil {
 			logErr(err, "["+c.Page()+"]-["+name+"]")
 			continue
 		}
 		break
 	}
 	return output
+}
+
+func RunOffline(url []string, name string, dir string, start int) {
+	var err error
+
+	kcc := kcc.New(OfflineMode)
+	for n, c := range collectors {
+		link := find(n, url)
+		if link == "" {
+			continue
+		}
+		for chap := start; chap <= 3; chap++ {
+			if err := c.Collect(link, chap, dir); err != nil {
+				logErr(err, "")
+				break
+			}
+		}
+		if _, err = kcc.Make(name, dir); err != nil {
+			logErr(err, "["+c.Page()+"]-["+name+"]")
+		}
+		break
+	}
 }
 
 func find(name string, url []string) string {
@@ -74,7 +105,7 @@ func (b *Bot) GetLink(base string, chap int) string {
 	return ""
 }
 
-func (b *Bot) Collect(base string, chap int, outputDir string) {
+func (b *Bot) Collect(base string, chap int, outputDir string) error {
 	nameInd := 0
 
 	b.Colly.OnRequest(func(r *colly.Request) {
@@ -83,7 +114,7 @@ func (b *Bot) Collect(base string, chap int, outputDir string) {
 
 	b.Colly.OnResponse(func(r *colly.Response) {
 		ext := util.GetExt(r.FileName())
-		name := fmt.Sprintf("%03d%s", nameInd, ext)
+		name := fmt.Sprintf("Chap%03d_%03d%s", chap, nameInd, ext)
 		nameInd++
 		if strings.Index(r.Headers.Get("Content-Type"), "image") > -1 {
 			if err := r.Save(filepath.Join(outputDir, name)); err != nil {
@@ -95,6 +126,7 @@ func (b *Bot) Collect(base string, chap int, outputDir string) {
 			}
 		}
 	})
+	return nil
 }
 
 func (b *Bot) Visit(url string) {

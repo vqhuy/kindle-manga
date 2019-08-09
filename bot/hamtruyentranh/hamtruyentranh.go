@@ -1,4 +1,4 @@
-package hocvientruyentranh
+package hamtruyentranh
 
 import (
 	"strconv"
@@ -21,14 +21,14 @@ type collector struct {
 var _ bot.Collector = (*collector)(nil)
 
 func (b *collector) Page() string {
-	return "http://hocvientruyentranh.com/"
+	return "http://hamtruyentranh.com/"
 }
 
 func (b *collector) GetLink(base string, chap int) string {
 	// should not use the base colly's collector
 	c := colly.NewCollector()
 	var link string
-	c.OnHTML(`div.box-body tbody tr`, func(e *colly.HTMLElement) {
+	c.OnHTML(`select.chapter-selected`, func(e *colly.HTMLElement) {
 		s := e.DOM.Children().First().Children().First()
 		href, _ := s.Attr("href")
 		title, _ := s.Attr("title")

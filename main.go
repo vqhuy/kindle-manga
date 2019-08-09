@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
 
-	"github.com/BurntSushi/toml"
+	"github.com/vqhuy/kindle-manga/bot"
 )
 
 var configDir string
@@ -34,13 +33,17 @@ type collection struct {
 }
 
 func main() {
-	var coll collection
-	configPath := filepath.Join(configDir, "config.toml")
-	if _, err := toml.DecodeFile(configPath, &coll); err != nil {
-		log.Fatalln(err)
-	}
+	// var coll collection
+	// configPath := filepath.Join(configDir, "config.toml")
+	// if _, err := toml.DecodeFile(configPath, &coll); err != nil {
+	// 	log.Fatalln(err)
+	// }
 
-	bot := newRobot(coll, configPath)
-	bot.run()
-	bot.save()
+	// bot := newRobot(coll, configPath)
+	// bot.run()
+	// bot.save()
+	url := "http://www.nettruyen.com/truyen-tranh/vo-toi-la-wagatsuma"
+	name := "votoi"
+	dir := "/Users/huyvq/Desktop/test"
+	bot.RunOffline([]string{url}, name, dir, 2)
 }
