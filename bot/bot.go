@@ -65,7 +65,7 @@ func RunOffline(url []string, name string, dir string, start int) {
 		if link == "" {
 			continue
 		}
-		for chap := start; chap <= 3; chap++ {
+		for chap := start; ; chap++ {
 			if err := c.Collect(link, chap, dir); err != nil {
 				logErr(err, "")
 				break
