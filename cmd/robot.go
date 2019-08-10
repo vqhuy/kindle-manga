@@ -1,16 +1,67 @@
-package main
+package cmd
 
 import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"os/user"
+	"path/filepath"
 
 	"github.com/BurntSushi/toml"
+	"github.com/spf13/cobra"
 	"github.com/vqhuy/kindle-manga/bot"
 	"github.com/vqhuy/kindle-manga/util"
 )
 
+var robotCmd = &cobra.Command{
+	Use:   "bot",
+	Short: "bot",
+	Long:  `bot`,
+	Run: func(cmd *cobra.Command, args []string) {
+		initConfig()
+
+		var coll collection
+		configPath := filepath.Join(configDir, "config.toml")
+		if _, err := toml.DecodeFile(configPath, &coll); err != nil {
+			log.Fatalln(err)
+		}
+
+		bot := newRobot(coll, configPath)
+		bot.run()
+		bot.save()
+
+	},
+}
+
+func init() {
+	offlineCmd.AddCommand(robotCmd)
+}
+
+var configDir string
+
+func initConfig() {
+	usr, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+
+	configDir = filepath.Join(usr.HomeDir, ".config", "kindle-manga")
+	err = os.MkdirAll(configDir, 0755)
+	if err != nil {
+		panic(err)
+	}
+}
+
+type manga struct {
+	Name string
+	Chap int
+	URL  []string
+}
+type collection struct {
+	Manga []manga
+}
 type robot struct {
 	configPath string
 	fav        collection
