@@ -1,8 +1,7 @@
 package hamtruyentranh
 
 import (
-	"strconv"
-	"strings"
+	"fmt"
 
 	"github.com/gocolly/colly"
 	"github.com/vqhuy/kindle-manga/bot"
@@ -21,20 +20,22 @@ type collector struct {
 var _ bot.Collector = (*collector)(nil)
 
 func (b *collector) Page() string {
-	return "http://hamtruyentranh.com/"
+	return "https://hamtruyentranh.com/"
 }
 
 func (b *collector) GetLink(base string, chap int) string {
 	// should not use the base colly's collector
+	fmt.Println("Hello")
 	c := colly.NewCollector()
 	var link string
-	c.OnHTML(`select.chapter-selected`, func(e *colly.HTMLElement) {
+	c.OnHTML(`tr.chapter-title`, func(e *colly.HTMLElement) {
 		s := e.DOM.Children().First().Children().First()
 		href, _ := s.Attr("href")
-		title, _ := s.Attr("title")
-		if strings.Contains(title, strconv.Itoa(chap)) {
-			link = href
-		}
+		// title, _ := s.Html()
+		// if strings.Contains(title, strconv.Itoa(chap)) {
+		// 	link = href
+		// }
+		link = href
 	})
 
 	c.Visit(base)
