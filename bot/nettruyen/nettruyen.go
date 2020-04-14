@@ -2,6 +2,7 @@ package nettruyen
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gocolly/colly"
 	"github.com/vqhuy/kindle-manga/bot"
@@ -20,7 +21,8 @@ type collector struct {
 var _ bot.Collector = (*collector)(nil)
 
 func (b *collector) Page() string {
-	return "http://www.nettruyen.com"
+	// now renamed to nhattruyen
+	return "http://nhattruyen.com"
 }
 
 func (b *collector) GetLink(base string, chap int) string {
@@ -32,7 +34,7 @@ func (b *collector) GetLink(base string, chap int) string {
 		s := e.DOM
 		href, _ := s.Attr("href")
 		title, _ := s.Html()
-		if title == chapstr {
+		if strings.Contains(title, chapstr) {
 			link = href
 		}
 	})
